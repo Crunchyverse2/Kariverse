@@ -13,25 +13,59 @@ document.addEventListener('DOMContentLoaded', () => {
     const usernameChangeCooldown = 300000; // 5 minutes
     let lastUsernameChange = 0;
 
-    const tracks = [
-      { id: 'TRACK_ID_1', title: 'Song One', preview: 'https://p.scdn.co/mp3-preview/...', art:'url1' },
-      { id: 'TRACK_ID_2', title: 'Song Two', preview: 'https://p.scdn.co/mp3-preview/...', art:'url2' },
-      // add more tracks here
-    ];
-
+    let tracks = [];
     let currentTrackIndex = 0;
     const audio = new Audio();
-    const canvas = document.getElementById('waveform-canvas');
-    const ctx2d = canvas.getContext('2d');
-    const trackArt = document.getElementById('track-art');
-    const trackTitle = document.getElementById('track-title');
-    const playBtn = document.getElementById('play-pause');
+    const trackArt = document.getElementById("track-art");
+    const trackTitle = document.getElementById("track-title");
+    const playBtn = document.getElementById("play-pause");
 
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const analyser = audioCtx.createAnalyser();
-    const source = audioCtx.createMediaElementSource(audio);
-    source.connect(analyser);
-    analyser.connect(audioCtx.destination);
+    async function loadTracks() {
+      try {
+        const res = await fetch('tracks.json');
+        tracks = await res.json();
+        if (tracks.length > 0) {
+          loadTrack(0);
+        }
+      } catch (err) {
+        console.error("Failed to load tracks.json:", err);
+      }
+    }
+
+    function loadTrack(index) {
+      const track = tracks[index];
+      audio.src = track.file;
+      trackArt.src = track.art || '';
+      trackTitle.textContent = track.title;
+    }
+
+    function togglePlay() {
+      if (audio.paused) {
+        audio.play();
+        playBtn.textContent = '⏸️';
+      } else {
+        audio.pause();
+        playBtn.textContent = '▶️';
+      }
+    }
+
+    playBtn.addEventListener('click', togglePlay);
+
+    document.getElementById('prev-track').addEventListener('click', () => {
+      currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+      loadTrack(currentTrackIndex);
+      audio.play();
+      playBtn.textContent = '⏸️';
+    });
+
+    document.getElementById('next-track').addEventListener('click', () => {
+      currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+      loadTrack(currentTrackIndex);
+      audio.play();
+      playBtn.textContent = '⏸️';
+    });
+
+    loadTracks();
 
     /* ===== APP KEY (obfuscated) ===== */
     function getAppKey(){
