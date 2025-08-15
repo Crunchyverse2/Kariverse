@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WELCOME</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- GRADIENT BACKGROUND -->
+<div id="gradient-bg"></div>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+    <div class="cd-spin"></div>
+    <div class="loader-text">LOADING...</div>
+</div>
+
+<!-- HEADER -->
+<header id="header">
+    <h1 id="welcome-text">WELCOME</h1>
+    <nav id="nav-buttons">
+        <span class="nav-item" data-page="home">HOME</span>
+        <span class="nav-item" data-page="about">ABOUT</span>
+        <span class="nav-item" data-page="music">MUSIC</span>
+        <span class="nav-item" data-page="gallery">GALLERY</span>
+        <span class="nav-item" data-page="chat">CHAT</span>
+        <span class="nav-item" data-page="contact">CONTACT</span>
+        <span class="nav-item" data-page="socials">SOCIALS</span>
+    </nav>
+</header>
+
+<!-- LOGIN / PROFILE -->
+<div id="login-profile">
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button id="login-btn">Log In</button>
+    <button id="signup-btn">Sign Up</button>
+    <img id="top-pfp" src="pfp-placeholder.png" alt="Profile Picture">
+    <div id="status-indicator" class="status-offline"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main>
+    <!-- HOME PAGE -->
+    <section id="page-home" class="page active">
+        <h2>HOME</h2>
+        <div id="updates-feed"></div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="page-about" class="page">
+        <h2>ABOUT</h2>
+        <p>Kari is a versatile artist crafting music stuck in time with Y2K vibes.</p>
+    </section>
+
+    <!-- MUSIC PAGE -->
+    <section id="page-music" class="page">
+      <h2>MUSIC</h2>
+
+      <!-- MUSIC PLAYER -->
+      <div id="music-player-container">
+        <div id="current-track-info" style="display:flex; align-items:center; gap:1rem;">
+          <img id="track-art" src="" alt="Album Art" width="100" height="100">
+          <div id="track-title" style="font-weight:bold; font-size:1.2rem;">Loading...</div>
+        </div>
+	<script src="script.js"></script>
+	<script src="musicplayer.js"></script>
+
+
+        <canvas id="waveform-canvas" width="600" height="100" style="margin-top:10px; background:#111; border-radius:6px;"></canvas>
+
+        <div id="music-controls" style="margin-top:10px;">
+          <button id="prev-track">⏮️</button>
+          <button id="play-pause">▶️</button>
+          <button id="next-track">⏭️</button>
+        </div>
+
+        <div id="music-links" style="margin-top:15px;">
+          <a href="https://open.spotify.com/artist/7GG0psjHrLABB4yQkdnrTY" target="_blank">Spotify</a> |
+          <a href="https://soundcloud.com/crunchyverse" target="_blank">SoundCloud</a> |
+          <a href="https://music.apple.com/us/artist/kari/1780686767" target="_blank">Apple Music</a> |
+          <a href="https://www.bandlab.com/crunchyverse" target="_blank">BandLab</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="page-gallery" class="page">
+        <h2>GALLERY</h2>
+        <p>Artwork and images float around like an old Flash site ✨</p>
+    </section>
+
+    <!-- CHAT -->
+    <section id="page-chat" class="page">
+        <h2>CHATROOM</h2>
+        <div id="chat-wrapper"></div>
+        <input type="text" id="chat-input" placeholder="Type a message...">
+        <button id="chat-send">Send</button>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="page-contact" class="page">
+        <h2 id="contact-header">
+          <span data-letter="C">C</span>
+          <span data-letter="O">O</span>
+          <span data-letter="N">N</span>
+          <span data-letter="T">T</span>
+          <span data-letter="A">A</span>
+          <span data-letter="C">C</span>
+          <span data-letter="T">T</span>
+        </h2>
+        <form action="https://formspree.io/f/yourformid" method="POST">
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Message" required></textarea>
+            <button type="submit">SEND</button>
+        </form>
+    </section>
+
+    <!-- SOCIALS -->
+    <section id="page-socials" class="page">
+        <h2>SOCIALS</h2>
+        <ul>
+            <li><a href="https://www.instagram.com/crunchyverse/" target="_blank">Instagram</a></li>
+        </ul>
+    </section>
+
+    <!-- ACCOUNT -->
+    <section id="page-account" class="page">
+        <h2>ACCOUNT</h2>
+        <p>Username: <span id="account-username"></span></p>
+        <input type="text" id="account-bio" placeholder="Your Bio (max 100 chars)">
+        <input type="file" id="account-pfp-upload" accept="image/*"><br>
+        <select id="account-status">
+            <option value="online">Online</option>
+            <option value="away">Away</option>
+            <option value="offline">Offline</option>
+        </select><br><br>
+        <button id="change-username">Change Username</button>
+        <button id="change-password">Change Password</button><br><br>
+        <button id="save-account">Save</button>
+        <button id="sign-out">Sign Out</button>
+
+        <div class="friends-list">
+            <h3>Friends</h3>
+            <ul id="friends-ul"></ul>
+            <button id="add-friend-btn">Add Friend</button>
+        </div>
+    </section>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

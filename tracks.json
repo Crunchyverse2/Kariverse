@@ -1,0 +1,17 @@
+[
+  {
+    "title": "AManlikeMe",
+    "file": "music/amanlikeme.mp3",
+    "art": "images/song1-art.jpg"
+  },
+  {
+    "title": "WAKEUP",
+    "file": "music/wakeup.mp3",
+    "art": "images/song2-art.jpg"
+  },
+  {
+    "title": "Williseeyousoon?",
+    "file": "music/williseeyousoon.mp3",
+    "art": "images/upcoming-art.jpg"
+  }
+]
