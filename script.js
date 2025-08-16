@@ -13,59 +13,83 @@ document.addEventListener('DOMContentLoaded', () => {
     const usernameChangeCooldown = 300000; // 5 minutes
     let lastUsernameChange = 0;
 
-    let tracks = [];
-    let currentTrackIndex = 0;
-    const audio = new Audio();
-    const trackArt = document.getElementById("track-art");
-    const trackTitle = document.getElementById("track-title");
-    const playBtn = document.getElementById("play-pause");
+    const trackArt = document.getElementById('track-art');
+      const trackTitle = document.getElementById('track-title');
+      const playBtn = document.getElementById('play-pause');
+      const prevBtn = document.getElementById('prev-track');
+      const nextBtn = document.getElementById('next-track');
+      const canvas = document.getElementById('waveform-canvas');
+      const ctx = canvas.getContext('2d');
 
-    async function loadTracks() {
-      try {
+      let tracks = [];
+      let currentTrackIndex = 0;
+      const audio = new Audio();
+      let isPlaying = false;
+
+      // Load tracks from JSON
+      async function loadTracks() {
         const res = await fetch('tracks.json');
         tracks = await res.json();
-        if (tracks.length > 0) {
-          loadTrack(0);
+        if(tracks.length > 0) loadTrack(0);
+      }
+
+      function loadTrack(index) {
+        const track = tracks[index];
+        if(!track) return;
+        audio.src = track.file;
+        trackArt.src = track.art;
+        trackTitle.textContent = track.title;
+      }
+
+      function togglePlay() {
+        if(audio.paused) {
+          audio.play();
+          playBtn.textContent = '⏸️';
+          isPlaying = true;
+        } else {
+          audio.pause();
+          playBtn.textContent = '▶️';
+          isPlaying = false;
         }
-      } catch (err) {
-        console.error("Failed to load tracks.json:", err);
       }
-    }
 
-    function loadTrack(index) {
-      const track = tracks[index];
-      audio.src = track.file;
-      trackArt.src = track.art || '';
-      trackTitle.textContent = track.title;
-    }
-
-    function togglePlay() {
-      if (audio.paused) {
-        audio.play();
-        playBtn.textContent = '⏸️';
-      } else {
-        audio.pause();
-        playBtn.textContent = '▶️';
+      function prevTrack() {
+        currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+        loadTrack(currentTrackIndex);
+        if(isPlaying) audio.play();
       }
-    }
 
-    playBtn.addEventListener('click', togglePlay);
+      function nextTrack() {
+        currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+        loadTrack(currentTrackIndex);
+        if(isPlaying) audio.play();
+      }
 
-    document.getElementById('prev-track').addEventListener('click', () => {
-      currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-      loadTrack(currentTrackIndex);
-      audio.play();
-      playBtn.textContent = '⏸️';
+      playBtn.addEventListener('click', togglePlay);
+      prevBtn.addEventListener('click', prevTrack);
+      nextBtn.addEventListener('click', nextTrack);
+
+      // AudioContext for waveform
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const analyser = audioCtx.createAnalyser();
+      const source = audioCtx.createMediaElementSource(audio);
+      source.connect(analyser);
+      analyser.connect(audioCtx.destination);
+
+      function drawWaveform() {
+        requestAnimationFrame(drawWaveform);
+        const data = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(data);
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        data.forEach((v,i)=>{
+          ctx.fillStyle = '#0ff';
+          ctx.fillRect(i*2, canvas.height-v, 1, v);
+        });
+      }
+
+      await loadTracks();
+      drawWaveform();
     });
-
-    document.getElementById('next-track').addEventListener('click', () => {
-      currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-      loadTrack(currentTrackIndex);
-      audio.play();
-      playBtn.textContent = '⏸️';
-    });
-
-    loadTracks();
 
     /* ===== APP KEY (obfuscated) ===== */
     function getAppKey(){
