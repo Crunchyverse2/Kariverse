@@ -13,26 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const usernameChangeCooldown = 300000; // 5 minutes
     let lastUsernameChange = 0;
 
-    const tracks = [
-      { id: 'TRACK_ID_1', title: 'Song One', preview: 'https://p.scdn.co/mp3-preview/...', art:'url1' },
-      { id: 'TRACK_ID_2', title: 'Song Two', preview: 'https://p.scdn.co/mp3-preview/...', art:'url2' },
-      // add more tracks here
-    ];
-
-    let currentTrackIndex = 0;
-    const audio = new Audio();
-    const canvas = document.getElementById('waveform-canvas');
-    const ctx2d = canvas.getContext('2d');
-    const trackArt = document.getElementById('track-art');
-    const trackTitle = document.getElementById('track-title');
-    const playBtn = document.getElementById('play-pause');
-
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const analyser = audioCtx.createAnalyser();
-    const source = audioCtx.createMediaElementSource(audio);
-    source.connect(analyser);
-    analyser.connect(audioCtx.destination);
-
     /* ===== APP KEY (obfuscated) ===== */
     function getAppKey(){
         const p1='cR'; const p2='unchyV3'; const p3='rsE2025!';
@@ -414,43 +394,4 @@ document.addEventListener('DOMContentLoaded', () => {
     forgotBtn.addEventListener('click', resetPasswordHelper);
     loginProfile.appendChild(forgotBtn);
 
-    function loadTrack(index){
-      const track = tracks[index];
-      audio.src = track.preview;
-      trackArt.src = track.art;
-      trackTitle.textContent = track.title;
-    }
-
-    function togglePlay(){
-      if(audioCtx.state === 'suspended') audioCtx.resume();
-      if(audio.paused) { audio.play(); playBtn.textContent='⏸️'; }
-      else { audio.pause(); playBtn.textContent='▶️'; }
-    }
-
-    playBtn.addEventListener('click', togglePlay);
-    document.getElementById('prev-track').addEventListener('click', ()=>{
-      currentTrackIndex = (currentTrackIndex-1+tracks.length)%tracks.length;
-      loadTrack(currentTrackIndex);
-      audio.play(); playBtn.textContent='⏸️';
-    });
-    document.getElementById('next-track').addEventListener('click', ()=>{
-      currentTrackIndex = (currentTrackIndex+1)%tracks.length;
-      loadTrack(currentTrackIndex);
-      audio.play(); playBtn.textContent='⏸️';
-    });
-
-    // Waveform animation
-    function drawWaveform(){
-      requestAnimationFrame(drawWaveform);
-      const data = new Uint8Array(analyser.frequencyBinCount);
-      analyser.getByteFrequencyData(data);
-      ctx2d.clearRect(0,0,canvas.width,canvas.height);
-      data.forEach((v,i)=>{
-        ctx2d.fillStyle = '#0ff';
-        ctx2d.fillRect(i*2, canvas.height-v, 1, v);
-      });
-    }
-
-    loadTrack(currentTrackIndex);
-    drawWaveform();
-});
+}); 
